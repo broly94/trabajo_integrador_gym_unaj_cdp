@@ -69,20 +69,21 @@
                             Console.Clear();
                             Console.WriteLine("Ingrese el numero de socio: ");
                             int NumberMemberShip = int.Parse(Console.ReadLine());
-                            ShowClientById(NumberMemberShip);
+                            ShowClientByMemberShip(NumberMemberShip);
                             break;
                         case 6:
                             Console.Clear();
+                            ShowAgeAverageClient();
                             break;
                         case 7:
-                            exit = true;
+                            exit = Exit();
                             Console.WriteLine("Bye...");
                             break;
                         case 8:
                             ShowAllUsers();
                             break;
                         default:
-                            exit = false;
+                            Console.WriteLine("Opcion no reconocida...");
                             break;
 
                     }
@@ -92,68 +93,7 @@
             }
         }
 
-        public static void ShowAllUsers()
-        {
-
-            object[][] Users = GetAllUsers();
-
-            for (int i = 0; i < Users.Length; i++)
-            {
-                if (Users[i] != null)
-                {
-
-                    object[] User = (object[])Users[i];
-
-                    for (int j = 0; j < User.Length; j++)
-                    {
-                        Console.WriteLine($"{Keys[j]} : {User[j]}");
-                    }
-                }
-            }
-        }
-
-        public static void ShowClientById(int NumberMembership)
-        {
-            object[][] Users = GetAllUsers();
-
-            object[] UserSelected = new object[9];
-
-            for (int i = 0; i < Users.Length; i++)
-            {
-                if (Users[i] != null)
-                {
-
-                    object[] User = (object[])Users[i];
-
-                    for (int j = 0; j < User.Length; j++)
-                    {
-                        if (int.Parse(User[3].ToString()) == NumberMembership)
-                        {
-                           
-                            UserSelected[j] = User[j];
-                       
-                        }
-                    }
-                }
-            }
-
-           for(int i = 0; i < UserSelected.Length; i++)
-            {
-                Console.Clear();
-                Console.WriteLine($"=== Cliente Número: {UserSelected[3]} ===");
-                Console.WriteLine($"Nombre: {UserSelected[0]}");
-                Console.WriteLine($"Apellido: {UserSelected[1]}");
-                Console.WriteLine($"Dni: {UserSelected[2]}");
-                Console.WriteLine($"Email: {UserSelected[4]}");
-                Console.WriteLine($"Edad: {UserSelected[5]}");
-                Console.WriteLine($"Peso Actual (En KG): {UserSelected[6]}");
-                Console.WriteLine($"Altura (en CM): {UserSelected[7]}");
-                Console.WriteLine($"Nivel de actividad: {UserSelected[8]}");
-                Console.WriteLine("==========");
-                Console.WriteLine("\n");
-            }
-        }
-
+        //Ordenado por numero de opcion del menu
         public static void CreateUsers()
         {
 
@@ -226,126 +166,69 @@
             }
         }
 
-        public static object[][] GetAllUsers()
-        {
-            //Se crea por fuera y se seteea el indice no nulo de container.
-            //Esto para verificar que no devuelva los lugares vacios dentro del array
-            //Y en la variable count se guarda dicha cantidad de indices llenos.
-            int count = 0;
-
-            for (int i = 0; i < ContainerUser.Length; i++)
-            {
-
-                if (ContainerUser[i] != null)
-
-                {
-                    count++;
-                }
-
-            }
-
-            //Se crea un vector nuevo con dimension = a la cantidad de los datos que existen dentro del ContainerUser que sean != null
-            object[][] result = new object[count][];
-
-            for (int i = 0; i < ContainerUser.Length; i++)
-            {
-                if (ContainerUser[i] != null)
-                {
-                    result[i] = ContainerUser[i];
-                }
-            }
-
-            return result;
-
-        }
-
         public static void CalculateAllIMC()
         {
-            object[][] Users = GetAllUsers();
-
             double IMC = 0.0;
             string Name = "";
             double Weight = 0.0;
             double Height = 0.0;
 
-            for (int i = 0; i < Users.Length; i++)
+            for (int i = 0; i < ContainerUser.Length; i++)
             {
-                if (Users[i] != null)
+                if (ContainerUser[i] != null)
                 {
-                    object[] User = (object[])Users[i];
+                    object[] User = (object[])ContainerUser[i];
 
-                    for (int j = 0; j < User.Length; j++)
-                    {
-                        Name = Convert.ToString(User[0]);
-                        Weight = Convert.ToInt64(User[6]);
-                        Height = Convert.ToDouble(User[7]) * Convert.ToDouble(User[7]);
-                        IMC = Math.Round((Weight / Height) * 10000, 2);
-                    }
+                    Name = Convert.ToString(User[0]);
+                    Weight = Convert.ToInt64(User[6]);
+                    Height = Convert.ToDouble(User[7]) * Convert.ToDouble(User[7]);
+                    IMC = Math.Round((Weight / Height) * 10000, 2);
+                    Console.WriteLine($"El/La cliente/a {Name} tiene un IMC de: {IMC}");
                 }
-                Console.WriteLine($"El/La cliente/a {Name} tiene un IMC de: {IMC}");
             }
 
         }
-
 
         public static void GetClientByActivity()
         {
-
-            object[][] Users = GetAllUsers();
-
             string LevelActivity = "";
             string Client = "";
 
-            for (int i = 0; i < Users.Length; i++)
+            Console.WriteLine("Ingrese que nivel de actividad quiere visualizar...");
+            Console.WriteLine("b = (Bajo), m = (Medio), a = (Alto)");
+            char Letter = char.Parse(Console.ReadLine());
+
+            for (int i = 0; i < ContainerUser.Length; i++)
             {
-                if (Users[i] != null)
+                if (ContainerUser[i] != null)
                 {
-                    object[] User = (object[])Users[i];
+                    object[] User = (object[])ContainerUser[i];
 
-                    for (int j = 0; j < User.Length; j++)
+                    if (Letter == Convert.ToChar(User[8].ToString().ToLower()[0]))
                     {
-                        if (User[8].ToString() == "bajo")
-                        {
-                            LevelActivity = User[8].ToString();
-                            Client = User[0].ToString();
-
-
-                        }
-                        else if (User[8].ToString() == "medio")
-                        {
-                            LevelActivity = User[8].ToString();
-                            Client = User[0].ToString();
-
-
-                        }
-                        else if (User[8].ToString() == "alto")
-                        {
-                            LevelActivity = User[8].ToString();
-                            Client = User[0].ToString();
-
-                        }
+                        LevelActivity = User[8].ToString();
+                        Client = User[0].ToString();
+                        Console.WriteLine($"El/La cliente/a {Client} tiene un nivel de actividad {User[8]}");
+                        break;
                     }
-
-                    Console.WriteLine($"El/La cliente/a {Client} tiene un nivel de actividad {User[8]}");
+                   
                 }
             }
         }
 
-        //Terminar
         public static void GetImcByRangeForHealthy()
         {
-            object[][] Users = GetAllUsers();
 
             double IMC = 0.0;
             string Name = "";
             double Weight = 0.0;
             double Height = 0.0;
 
-            for (int i = 0; i < Users.Length; i++)
+            for (int i = 0; i < ContainerUser.Length; i++)
             {
-                if (Users[i] != null)
+                if (ContainerUser[i] != null)
                 {
-                    object[] User = (object[])Users[i];
+                    object[] User = (object[])ContainerUser[i];
 
                     for (int j = 0; j < User.Length; j++)
                     {
@@ -354,10 +237,110 @@
                         Height = Convert.ToDouble(User[7]) * Convert.ToDouble(User[7]);
                         IMC = Math.Round((Weight / Height) * 10000, 2);
                     }
+                    if (IMC < 18.5 || IMC > 24.9)
+                    {
+                        Console.WriteLine($"El/La cliente/a {Name} esta fuera del rango saludable -> IMC: {IMC}");
+                    }
                 }
-                Console.WriteLine($"El/La cliente/a {Name} tiene un IMC de: {IMC}");
+
             }
         }
+
+        public static void ShowClientByMemberShip(int NumberMembership)
+        {
+
+            for (int i = 0; i < ContainerUser.Length; i++)
+            {
+                if (ContainerUser[i] != null)
+                {
+
+                    object[] User = (object[])ContainerUser[i];
+
+                    if (int.Parse(User[3].ToString()) == NumberMembership)
+                    {
+
+                        Console.Clear();
+                        Console.WriteLine($"=== Cliente Número: {User[3]} ===");
+                        Console.WriteLine($"Nombre: {User[0]}");
+                        Console.WriteLine($"Apellido: {User[1]}");
+                        Console.WriteLine($"Dni: {User[2]}");
+                        Console.WriteLine($"Email: {User[4]}");
+                        Console.WriteLine($"Edad: {User[5]}");
+                        Console.WriteLine($"Peso Actual (En KG): {User[6]}");
+                        Console.WriteLine($"Altura (en CM): {User[7]}");
+                        Console.WriteLine($"Nivel de actividad: {User[8]}");
+                        Console.WriteLine("==========");
+                        Console.WriteLine("\n");
+
+                    }
+                }
+            }
+        }
+
+        public static void ShowAgeAverageClient()
+        {
+
+            int SumAge = 0;
+            int CounterAge = 0;
+
+            for (int i = 0; i < ContainerUser.Length; i++)
+            {
+
+                if (ContainerUser[i] != null)
+                {
+
+                    object[] User = (object[])ContainerUser[i];
+
+                    SumAge += Convert.ToInt32(User[5]);
+
+                    CounterAge++;
+
+                }
+            }
+
+            if (CounterAge > 0)
+            {
+                double Average = Convert.ToInt32(SumAge / CounterAge);
+                Console.Clear();
+                Console.WriteLine($"El primedio de edad es: {Average}");
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("No hay clientes registrados");
+            }
+
+        }
+
+        public static bool Exit()
+        {
+            return true;
+        }
+
+        public static void ShowAllUsers()
+        {
+            Console.Clear();
+
+            for (int i = 0; i < ContainerUser.Length; i++)
+            {
+                if (ContainerUser[i] != null)
+                {
+                    Console.WriteLine($"###Cliente numero: {i + 1}####");
+
+                    object[] User = (object[])ContainerUser[i];
+
+                    for (int j = 0; j < User.Length; j++)
+                    {
+                        Console.WriteLine($"{Keys[j]} : {User[j]}");
+
+                    }
+                    Console.WriteLine($"=================================\n");
+                }
+            }
+        }
+
+
+
 
 
     }
