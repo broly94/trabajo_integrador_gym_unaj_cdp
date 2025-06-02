@@ -186,8 +186,8 @@
                 if (ContainerUser[i] != null)
                 {
                     Name = Convert.ToString(ContainerUser[i][0]);
-                    Weight = Convert.ToInt64(ContainerUser[i][6]);
-                    Height = Convert.ToDouble(ContainerUser[i][7]) * Convert.ToDouble(ContainerUser[i][7]);
+                    Weight = Convert.ToDouble(ContainerUser[i][6]);
+                    Height = Convert.ToInt32(ContainerUser[i][7]) * Convert.ToInt32(ContainerUser[i][7]);
                     IMC = Math.Round((Weight / Height) * 10000, 2);
                     Console.WriteLine($"El/La cliente/a {Name} tiene un IMC de: {IMC}");
                 }
@@ -357,12 +357,15 @@
 
         public static void CastingUsers()
         {
-            for (int i = 0; i < UsersCast().Length; i++)
+
+            var Users = UsersCast();
+
+            for (int i = 0; i < Users.Length; i++)
             {
 
                 if (ContainerUser[i] == null)
                 {
-                    ContainerUser[i] = UsersCast()[i];
+                    ContainerUser[i] = Users[i];
                 }
 
             }
